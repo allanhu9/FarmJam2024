@@ -7,8 +7,8 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;   
     [SerializeField] private float speed = 1;
-    [SerializeField] private float diagonalMultiplier = 0.7f;
     private Vector2 movement;
+    private AudioSource steps;
 
     private Animator animator;
     // Start is called before the first frame update
@@ -16,11 +16,12 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        steps = GetComponent<AudioSource>();
     }
 
     private void OnMovement(InputValue value) {
         movement = value.Get<Vector2>();
-        
+        //steps.Play();
         if (movement.x != 0 || movement.y != 0) {
             animator.SetFloat("X", movement.x);
             animator.SetFloat("Y", movement.y);
