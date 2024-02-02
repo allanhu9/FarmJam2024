@@ -1,45 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    private Rigidbody2D rb;   
+    [SerializeField] private float speed = 1;
+    [SerializeField] private float diagonalMultiplier = 0.7f;
+    private Vector2 movement;
 
-    Rigidbody2D body;   
-    public float speed = 1;
-    [SerializeField] float diagonalMultiplier = 0.7f;
-    float horizontal;
-    float vertical;
-
+    private Animator animator;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        body = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+    }
+
+    private void OnMovement(InputValue value) {
+        movement = value.Get<Vector2>();
+        
+        if (movement.x != 0 || movement.y != 0) {
+            animator.SetFloat("X", movement.x);
+            animator.SetFloat("Y", movement.y);
+            animator.SetBool("isMoving", true);
+        } else {
+            animator.SetBool("isMoving", false);
+        }
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
-        if (horizontal != 0 && vertical != 0) {
-            horizontal *= diagonalMultiplier;
-            vertical *= diagonalMultiplier;
-        }
+    private void Update()
+    { 
 
-        if (horizontal < 0) {
-            body.SetRotation(90); // moving left animation
-        } else if (horizontal > 0) {
-            body.SetRotation(-90); // moving right animation
-        } else if (vertical > 0) {
-            body.SetRotation(0); // moving up animation
-        } else if (vertical < 0) {
-            body.SetRotation(180); // moving down animation
-        }
-        
     }
-
+    
     private void FixedUpdate() {
-        body.velocity = new Vector2(horizontal * speed, vertical * speed);
+        rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
+
 }
