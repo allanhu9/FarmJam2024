@@ -8,8 +8,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;   
     [SerializeField] private float speed = 1;
     private Vector2 movement;
+    public Vector2 facingDirection;
     private AudioSource steps;
-
     private Animator animator;
     // Start is called before the first frame update
     private void Start()
@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 
     private void OnMovement(InputValue value) {
         movement = value.Get<Vector2>();
+        SetFacingDirection();
         //steps.Play();
         if (movement.x != 0 || movement.y != 0) {
             animator.SetFloat("X", movement.x);
@@ -31,12 +32,33 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void SetFacingDirection() {
+        if (movement.y > 0) {
+            facingDirection = new Vector2(0, 1);
+        } else if (movement.x > 0) {
+            facingDirection = new Vector2(1, 0);
+        } else if (movement.y < 0) {
+            facingDirection = new Vector2(0, -1);
+        } else if (movement.x < 0){
+            facingDirection = new Vector2(-1, 0);
+        }
+    }
+
+    // Eventually this code should check what item you have highlighted in the hotbar.
+    private void OnUseItem(){ // for now this just plows the ground
+       Vector3Int position = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0); 
+       if(GameManager.singleton.tileManager.IsInteractable(position)) {
+        Debug.Log("Interactable!");
+       }
+    }
+    
+
     // Update is called once per frame
     private void Update()
     { 
-
+        Vector3Int interactPosition = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0); 
     }
-    
+
     private void FixedUpdate() {
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
