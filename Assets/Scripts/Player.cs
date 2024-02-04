@@ -12,6 +12,12 @@ public class Player : MonoBehaviour
     private Vector2 facingDirection;
     private AudioSource steps;
     private Animator animator;
+    public Inventory inventory;
+
+    private void Awake() {
+        inventory = new Inventory(16);
+    }
+
     // Start is called before the first frame update
     private void Start()
     {
