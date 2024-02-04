@@ -12,12 +12,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake() {
         if (singleton != null && singleton != this) { // there can only be one
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         } else {
             singleton = this;
         }
 
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
         tileManager = GetComponent<TileManager>();
     }
 }

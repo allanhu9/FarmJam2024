@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;   
     [SerializeField] private float speed = 1;
     private Vector2 movement;
-    public Vector2 facingDirection;
+    private Vector3Int interactPosition;
+    private Vector2 facingDirection;
     private AudioSource steps;
     private Animator animator;
     // Start is called before the first frame update
@@ -46,9 +47,8 @@ public class Player : MonoBehaviour
 
     // Eventually this code should check what item you have highlighted in the hotbar.
     private void OnUseItem(){ // for now this just plows the ground
-       Vector3Int position = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0); 
-       if(GameManager.singleton.tileManager.IsInteractable(position)) {
-        Debug.Log("Interactable!");
+       if(GameManager.singleton.tileManager.IsInteractable(interactPosition)) {
+        GameManager.singleton.tileManager.SetInteracted(interactPosition);
        }
     }
     
@@ -56,7 +56,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     private void Update()
     { 
-        Vector3Int interactPosition = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0); 
+        interactPosition = new Vector3Int(Mathf.RoundToInt(transform.position.x + 0.5f*facingDirection.x), Mathf.RoundToInt(transform.position.y + 0.5f*facingDirection.y), 0);
+        GameManager.singleton.tileManager.SetHightlighted(interactPosition);
     }
 
     private void FixedUpdate() {
