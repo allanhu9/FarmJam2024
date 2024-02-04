@@ -14,8 +14,6 @@ public class Player : MonoBehaviour
     private Boolean inventoryOpen; // used to turn off other mouse clicks while the inventory is open
     private AudioSource steps;
     private Animator animator;
-<<<<<<< Updated upstream
-=======
     public Inventory inventory;
 
     private void Awake() {
@@ -23,7 +21,6 @@ public class Player : MonoBehaviour
         inventoryOpen = false;
     }
 
->>>>>>> Stashed changes
     // Start is called before the first frame update
     private void Start()
     {

@@ -37,7 +37,7 @@ public class TileManager : MonoBehaviour
 
     public void SetHightlighted(Vector3Int position) {
         TileBase tile = highlightMap.GetTile(position);
-        Boolean interactable = IsInteractable(position);
+        bool interactable = IsInteractable(position);
         if ((tile == null || tile.name != "HollowTile") && interactable) {
             highlightMap.SetTile(highlightedPosition, null);
             highlightMap.SetTile(position, hightlightTile);
