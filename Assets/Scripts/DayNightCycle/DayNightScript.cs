@@ -15,7 +15,7 @@ namespace DayNightScript
         private Light2D light;
         private float startTime;
         // Start is called before the first frame update
-        private void Awake()
+        private void Start()
         {
             light = GetComponent<Light2D>();
             startTime = Time.time;
