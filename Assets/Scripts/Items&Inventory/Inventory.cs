@@ -4,6 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class Inventory
 {
+    private InventoryUI UI;
     [System.Serializable]
     public class Slot{
         public int count;
@@ -44,12 +45,15 @@ public class Inventory
             Slot slot = new Slot();
             slots.Add(slot);
         }
+        GameObject UIObject = GameObject.FindGameObjectWithTag("Inventory");
+        UI = UIObject.GetComponent<InventoryUI>();
     }
 
     public void Add(Item itemToAdd) {
         foreach(Slot slot in slots) {
             if (slot.itemName.Equals(itemToAdd.data.name) && !slot.IsFull()) {
                 slot.AddItem(itemToAdd);
+                UI.Setup();
                 return;
             }
         }
@@ -57,6 +61,7 @@ public class Inventory
         foreach(Slot slot in slots) {
             if(slot.itemName == "") {
                 slot.AddItem(itemToAdd);
+                UI.Setup();
                 return;
             }
         }
@@ -64,5 +69,6 @@ public class Inventory
 
     public void Remove(int index) {
         slots[index].RemoveItem();
+        UI.Setup();
     }
 }

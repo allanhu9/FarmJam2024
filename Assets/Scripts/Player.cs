@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,14 +9,16 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;   
     [SerializeField] private float speed = 1;
     private Vector2 movement;
-    private Vector3Int interactPosition;
-    private Vector2 facingDirection;
+    private Vector3Int interactPosition; // the tile that the player is currently trying to interact with
+    private Vector2 facingDirection; // used to find correct direction of tile to interact with.
+    private Boolean inventoryOpen; // used to turn off other mouse clicks while the inventory is open
     private AudioSource steps;
     private Animator animator;
     public Inventory inventory;
 
     private void Awake() {
         inventory = new Inventory(16);
+        inventoryOpen = false;
     }
 
     // Start is called before the first frame update
@@ -53,9 +56,12 @@ public class Player : MonoBehaviour
 
     // Eventually this code should check what item you have highlighted in the hotbar.
     private void OnUseItem(){ // for now this just plows the ground
-       if(GameManager.singleton.tileManager.IsInteractable(interactPosition)) {
-        GameManager.singleton.tileManager.SetInteracted(interactPosition);
-       }
+        if (!inventoryOpen) {
+            if(GameManager.singleton.tileManager.IsInteractable(interactPosition)) {
+                GameManager.singleton.tileManager.SetInteracted(interactPosition);
+            }
+        }
+       
     }
     
 
@@ -68,6 +74,14 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate() {
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+    }
+
+    public void toggleInventoryOpen() {
+        if (inventoryOpen) {
+            inventoryOpen = false;
+        } else {
+            inventoryOpen = true;
+        }
     }
 
 }
