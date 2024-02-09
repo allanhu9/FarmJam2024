@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 [System.Serializable]
 public class Inventory
 {
-    private InventoryUI UI;
+    public InventoryUI UI;
+    
     [System.Serializable]
     public class Slot{
         public int count;
@@ -47,13 +49,14 @@ public class Inventory
         }
         GameObject UIObject = GameObject.FindGameObjectWithTag("Inventory");
         UI = UIObject.GetComponent<InventoryUI>();
+
     }
 
     public void Add(Item itemToAdd) {
         foreach(Slot slot in slots) {
             if (slot.itemName.Equals(itemToAdd.data.name) && !slot.IsFull()) {
                 slot.AddItem(itemToAdd);
-                UI.Setup();
+                UI.Refresh();
                 return;
             }
         }
@@ -61,7 +64,7 @@ public class Inventory
         foreach(Slot slot in slots) {
             if(slot.itemName == "") {
                 slot.AddItem(itemToAdd);
-                UI.Setup();
+                UI.Refresh();
                 return;
             }
         }
@@ -69,6 +72,13 @@ public class Inventory
 
     public void Remove(int index) {
         slots[index].RemoveItem();
-        UI.Setup();
+        UI.Refresh();
+    }
+
+    public void Swap(int index1, int index2) {
+        Debug.Log(slots.Capacity);
+        Slot temp = slots[index1];
+        slots[index1] = slots[index2];
+        slots[index2] = temp;
     }
 }

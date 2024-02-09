@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     private Vector2 movement;
     private Vector3Int interactPosition; // the tile that the player is currently trying to interact with
     private Vector2 facingDirection; // used to find correct direction of tile to interact with.
-    private Boolean inventoryOpen; // used to turn off other mouse clicks while the inventory is open
+    public bool inventoryOpen; // used to turn off other mouse clicks while the inventory is open
     private AudioSource steps;
     private Animator animator;
     public Inventory inventory;
