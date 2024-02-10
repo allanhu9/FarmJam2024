@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager singleton;
     public TileManager tileManager;
     public ItemManager itemManager;
+    public TimeManager timeManager;
 
     private void Awake() {
         if (singleton != null && singleton != this) { // there can only be one
@@ -20,5 +21,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         tileManager = GetComponent<TileManager>();
         itemManager = GetComponent<ItemManager>();
+        timeManager = GetComponent<TimeManager>();
     }
 }
