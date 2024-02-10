@@ -6,7 +6,7 @@ using UnityEngine;
 public class Inventory
 {
     public InventoryUI UI;
-    
+
     [System.Serializable]
     public class Slot{
         public int count;
@@ -76,7 +76,7 @@ public class Inventory
     }
 
     public void Swap(int index1, int index2) {
-        Debug.Log(slots.Capacity);
+        //Debug.Log(slots.Capacity);
         Slot temp = slots[index1];
         slots[index1] = slots[index2];
         slots[index2] = temp;

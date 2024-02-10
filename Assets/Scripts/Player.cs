@@ -63,7 +63,6 @@ public class Player : MonoBehaviour
         }
        
     }
-    
 
     // Update is called once per frame
     private void Update()
@@ -75,13 +74,4 @@ public class Player : MonoBehaviour
     private void FixedUpdate() {
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
-
-    public void toggleInventoryOpen() {
-        if (inventoryOpen) {
-            inventoryOpen = false;
-        } else {
-            inventoryOpen = true;
-        }
-    }
-
 }
