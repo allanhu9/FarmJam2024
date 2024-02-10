@@ -6,18 +6,16 @@ using UnityEngine.Serialization;
 
 namespace DayNightScript
 {
-    [RequireComponent(typeof(Light2D))]
     public class DayNightScript : MonoBehaviour
     {
-        public float duration = 5f;
+        public float duration = 0.1f;
 
         [SerializeField] private Gradient time;
-        private Light2D light;
+        [SerializeField] private Light2D light;
         private float startTime;
         // Start is called before the first frame update
         private void Start()
         {
-            light = GetComponent<Light2D>();
             startTime = Time.time;
         }
 
