@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-
+using UnityEngine.SceneManagement;
 public class TimeManager : MonoBehaviour
 {
     public static Action OnMinuteChanged;
@@ -15,12 +15,14 @@ public class TimeManager : MonoBehaviour
 
     private float gameMinuteToRealSecond = 0.1f;
     private float timer;
+    private float startTime;
     public Light2D sun;
 
     public GameObject PauseMenuPanel;
     // Start is called before the first frame update
     void Start()
     {
+        startTime = Time.time;
         Day = 1;
         Minute = 0;
         Hour = 8;
@@ -39,6 +41,10 @@ public class TimeManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePauseMenu();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Sleep();
         }
     }
     public void TogglePauseMenu()
@@ -79,13 +85,35 @@ public class TimeManager : MonoBehaviour
             }
             timer = gameMinuteToRealSecond;
         }
+
+        if(Hour == 1)
+        {
+           Sleep();
+        }
     }
 
     private void UpdateLight()
     {
-        float timeElapsed = Time.time;
+        float timeElapsed = Time.time - startTime;
         float period = 24 * 60 * gameMinuteToRealSecond;
         float intensity = Mathf.Sin(timeElapsed * Mathf.PI * 2 / period) * 0.5f + 0.5f;
         sun.intensity = intensity;
+    }
+
+    public void Sleep()
+    {
+        startTime = Time.time;
+        if(Hour >= 8)
+        {
+                Day++;
+        }
+        Hour = 8;
+        Minute = 0;
+        timer = gameMinuteToRealSecond;
+        OnMinuteChanged?.Invoke();
+        OnHourChanged?.Invoke();
+        OnDayChanged?.Invoke();
+        Time.timeScale = 0f;
+        SceneManager.LoadSceneAsync(1);
     }
 }
