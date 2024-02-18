@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     private Animator animator;
     public Inventory inventory;
 
+    // EFFECTS: Instantiate the inventory collection
+    // MODIFIES: this, Inventory
     private void Awake() {
         inventory = new Inventory(16);
         inventoryOpen = false;
@@ -29,6 +31,9 @@ public class Player : MonoBehaviour
         steps = GetComponent<AudioSource>();
     }
 
+    // This is called whenever the PlayerInput component on Player detects input
+    // EFFECTS: Sets facing direction and plays appropriate walking animation
+    // MODIFIES: this, animator
     private void OnMovement(InputValue value) {
         movement = value.Get<Vector2>();
         SetFacingDirection();
@@ -42,6 +47,8 @@ public class Player : MonoBehaviour
         }
     }
 
+    // EFFECTS: Sets the direction the player is facing for determining the tile to be interacted with
+    // MODIFIES: this
     private void SetFacingDirection() {
         if (movement.y > 0) {
             facingDirection = new Vector2(0, 1);
@@ -54,7 +61,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Eventually this code should check what item you have highlighted in the hotbar.
+    // EFFECTS: (temp) Tilles the ground
+    // MODIFIES: tileManager
     private void OnUseItem(){ // for now this just plows the ground
         if (!inventoryOpen) {
             if(GameManager.singleton.tileManager.IsInteractable(interactPosition)) {
@@ -67,10 +75,15 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     private void Update()
     { 
-        interactPosition = new Vector3Int(Mathf.RoundToInt(transform.position.x + 0.5f*facingDirection.x), Mathf.RoundToInt(transform.position.y + 0.5f*facingDirection.y), 0);
-        GameManager.singleton.tileManager.SetHightlighted(interactPosition);
+        // EFFECTS: Sets interact position based on current location and facingDirection, sets the tile to highlighted
+        // MODIFIES: this, TileManager
+        {
+            interactPosition = new Vector3Int(Mathf.RoundToInt(transform.position.x + 0.5f*facingDirection.x), Mathf.RoundToInt(transform.position.y + 0.5f*facingDirection.y), 0);
+            GameManager.singleton.tileManager.SetHightlighted(interactPosition);
+        }
     }
 
+    // EFFECTS: Sets the location of the player at 60fps
     private void FixedUpdate() {
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }

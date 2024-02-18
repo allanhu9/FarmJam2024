@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Manages the UI for the inventory
+
 public class InventoryUI : MonoBehaviour
 {
     public GameObject inventoryPanel;
@@ -11,24 +13,22 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private GameObject slotPrefab;
     private GameObject slotContainer;
 
+    // Using the slot prefab, instantiates the slot prefabs (16 of them) in the Slots GameObject in the Inventory GameObject
     void Awake() {
         slotContainer = transform.GetChild(0).transform.GetChild(0).gameObject;
         GameObject slot;
-        //List<SlotDropInteraction> temp = new List<SlotDropInteraction>(slots.Capacity);
 
         for (int i = 0; i < slots.Capacity; i++) {
             slot = Instantiate(slotPrefab, slotContainer.transform.position, Quaternion.identity, slotContainer.transform);
             SlotUI slotUI = slot.GetComponent<SlotUI>();
-            SlotDropInteraction slotDropInteraction = slot.GetComponent<SlotDropInteraction>();
+            SlotDropInteraction slotDropInteraction = slot.GetComponent<SlotDropInteraction>(); // sets the index of each slot, so they are swapped properly during drags and drops
             slotDropInteraction.slotIndex = i;
             slots[i] = slotUI;
         }
-        /*foreach (SlotDropInteraction dropInteraction in temp) {
-            dropInteraction.setInventory(player.inventory);
-        }*/
     }
 
-    // Update is called once per frame
+    // EFFECTS: When "F" is pressed, toggle inventory.
+    // TODO: This should be put in Player class using the PlayerInput feature of Unity
     void Update()
     {  
        if(Input.GetKeyDown(KeyCode.F)) {
@@ -36,8 +36,9 @@ public class InventoryUI : MonoBehaviour
        } 
     }
 
+    // EFFECTS: Toggles InventoryPanel GameObject active or inactive
+    // MODIFIES: this, InventoryPanel
     public void ToggleInventory() {
-        // if turned off
         if (!inventoryPanel.activeSelf) {
             Refresh();
             player.inventoryOpen = true;
@@ -49,7 +50,9 @@ public class InventoryUI : MonoBehaviour
         //Setup();
     }
 
-    public void Refresh() { // displays the correct item in each slot and the correct amount of each item
+    // EFFECTS: displays the correct item in each slot and the correct amount of each item based on the inventory class
+    // MODIFIES: this, slots
+    public void Refresh() { 
         if(slots.Count == player.inventory.slots.Count) {
             for (int i = 0; i < slots.Count; i++) {
                 if (player.inventory.slots[i].itemName != ""){
@@ -59,9 +62,5 @@ public class InventoryUI : MonoBehaviour
                 }
             }
         }
-    }
-    public void Remove(int slotID) {
-        player.inventory.Remove(slotID);
-        Refresh();
     }
 }

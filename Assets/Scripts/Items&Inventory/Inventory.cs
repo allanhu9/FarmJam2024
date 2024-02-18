@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
+
+// This class is a collection of slots, which is defined within. (Saving the slots array is probably most important)
+
 [System.Serializable]
 public class Inventory
 {
@@ -42,6 +45,8 @@ public class Inventory
 
     public List<Slot> slots = new List<Slot>();
 
+    // EFFECTS: Instantiates slot array with numSlots slots.
+    // MODIFIES: this
     public Inventory(int numSlots) {
         for (int i = 0; i < numSlots; i++) {
             Slot slot = new Slot();
@@ -52,6 +57,8 @@ public class Inventory
 
     }
 
+    // EFFECTS: adds an item to the first available slot or stacks it with an existing item, then refreshes the UI to reflect the change
+    // MODIFIES: this
     public void Add(Item itemToAdd) {
         foreach(Slot slot in slots) {
             if (slot.itemName.Equals(itemToAdd.data.name) && !slot.IsFull()) {
@@ -70,11 +77,15 @@ public class Inventory
         }
     }
 
+    // EFFECTS: Removes item at index
+    // MODIFIES: this
     public void Remove(int index) {
         slots[index].RemoveItem();
         UI.Refresh();
     }
 
+    // EFFECTS: Swaps items at index1 and index2
+    // MODIFIES: this
     public void Swap(int index1, int index2) {
         //Debug.Log(slots.Capacity);
         Slot temp = slots[index1];

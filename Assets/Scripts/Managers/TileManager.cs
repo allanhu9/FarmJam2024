@@ -6,14 +6,14 @@ using UnityEngine.Tilemaps;
 
 public class TileManager : MonoBehaviour
 {
-
-    [SerializeField] private Tilemap interactableMap;
-    [SerializeField] private Tilemap interactedMap;
-    [SerializeField] private Tilemap highlightMap;
-    [SerializeField] private Tile hiddenInteractableTile;
-    [SerializeField] private Tile hightlightTile;
-    [SerializeField] private Tile interactedTile;
-    private Vector3Int highlightedPosition = new Vector3Int(0, 0, 0);
+    // Each map is for a different level of interaction, saving these tile maps is probably most important
+    [SerializeField] private Tilemap interactableMap; // marks the tiles where you can interact with the world
+    [SerializeField] private Tilemap interactedMap; // where the interactions actually appear (tilled ground, ex.)
+    [SerializeField] private Tilemap highlightMap; // empty map for the highlight square which shows what you will interact with
+    [SerializeField] private Tile hiddenInteractableTile; // an invisible tile to replace all the interactable markers (arrows) with on start
+    [SerializeField] private Tile hightlightTile; // a hollow square for highlighting
+    [SerializeField] private Tile interactedTile; // temp, this is just tilled ground rn, but will need to add a system based on tools later
+    private Vector3Int highlightedPosition = new Vector3Int(0, 0, 0); // the position that is to be highlighted
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +24,7 @@ public class TileManager : MonoBehaviour
         }
     }
     
+    // EFFECTS: returns true if the tile at position is interactable
     public bool IsInteractable(Vector3Int position) {
         TileBase tile = interactableMap.GetTile(position);
         if(tile != null) 
@@ -31,10 +32,12 @@ public class TileManager : MonoBehaviour
         return false;
     }
 
+    // EFFECTS: (temp) tills the ground at position, in future will probably make this (position, tile) -> (changes the ground at position to tile)
     public void SetInteracted(Vector3Int position) {
         interactedMap.SetTile(position, interactedTile);
     }
 
+    // EFFECTS: highlights the given position
     public void SetHightlighted(Vector3Int position) {
         TileBase tile = highlightMap.GetTile(position);
         bool interactable = IsInteractable(position);
