@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
-public class TimeManager : MonoBehaviour
+public class TimeManager : MonoBehaviour, DataPersistable
 {
     public static Action OnMinuteChanged;
     public static Action OnHourChanged;
@@ -22,11 +22,11 @@ public class TimeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startTime = Time.time;
+        this.startTime = Time.time;
         Day = 1;
         Minute = 0;
         Hour = 8;
-        timer = gameMinuteToRealSecond;
+        this.timer = gameMinuteToRealSecond;
     }
 
     // Update is called once per frame
@@ -105,7 +105,7 @@ public class TimeManager : MonoBehaviour
         startTime = Time.time;
         if(Hour >= 8)
         {
-                Day++;
+            Day++;
         }
         Hour = 8;
         Minute = 0;
@@ -115,5 +115,21 @@ public class TimeManager : MonoBehaviour
         OnDayChanged?.Invoke();
         Time.timeScale = 0f;
         SceneManager.LoadSceneAsync(1);
+    }
+
+    public void LoadData(GameData data)
+    {
+        this.startTime = data.startTime;
+        Day = data.Day;
+        Minute = data.Minute;
+        Hour = data.Hour;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.startTime= this.startTime ;
+        data.Day = Day;
+        data.Minute = Minute;
+        data.Hour = Hour;
     }
 }
