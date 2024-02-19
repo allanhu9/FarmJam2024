@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Inventory
   - SlotContainer
+  - Sun
+  - HighlightedTile
+  - InteractedTiles
+  - InteractableTiles
+  - PauseMenu
   layers:
   - Default
   - TransparentFX

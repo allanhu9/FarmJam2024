@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
-public class TileManager : MonoBehaviour
+public class TileManager : MonoBehaviour, DataPersistable
 {
     // Each map is for a different level of interaction, saving these tile maps is probably most important
     [SerializeField] private Tilemap interactableMap; // marks the tiles where you can interact with the world
@@ -22,6 +23,8 @@ public class TileManager : MonoBehaviour
             if (tile != null && tile.name == "Interactable_Visible")
                 interactableMap.SetTile(position, hiddenInteractableTile);
         }
+        interactableMap = GameObject.FindWithTag("InteractableTiles").GetComponent<Tilemap>();
+        interactedMap = GameObject.FindWithTag("InteractedTiles").GetComponent<Tilemap>();
     }
     
     // EFFECTS: returns true if the tile at position is interactable
@@ -54,5 +57,18 @@ public class TileManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void LoadData(GameData data)
+    {
+        this.interactableMap = data.interactableMap;
+        this.interactedMap = data.interactedMap;
+        highlightMap = GameObject.FindWithTag("HighlightedTile").GetComponent<Tilemap>();
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.interactableMap = this.interactableMap;
+        data.interactedMap = this.interactedMap;
     }
 }

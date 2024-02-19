@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 
 [System.Serializable] 
-public class GameData : MonoBehaviour
+public class GameData
 {
     public int deathCount;
-    public float startTime;
     public int Day;
     public int Hour;
     public int Minute;
-
+    public Tilemap interactableMap;
+    public Tilemap interactedMap;
     // Notes on what needs to be saved:
     // TileManager
     // Inventory
@@ -22,9 +23,10 @@ public class GameData : MonoBehaviour
     public GameData()
     {
         this.deathCount = 0;
-        this.startTime = Time.time;
         this.Day = 1;
         this.Minute = 0;
         this.Hour = 8;
+        interactableMap = GameObject.FindWithTag("InteractableTiles").GetComponent<Tilemap>();
+        interactedMap = GameObject.FindWithTag("InteractedTiles").GetComponent<Tilemap>();
     }
 }

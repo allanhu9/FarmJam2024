@@ -12,7 +12,6 @@ public class SceneReturn : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Time.timeScale = 1f;
             SceneManager.LoadSceneAsync(0);
         }
     }

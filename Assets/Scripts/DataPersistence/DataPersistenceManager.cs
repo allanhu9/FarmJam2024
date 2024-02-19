@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class DataPersistenceManager : MonoBehaviour
 {
   public static DataPersistenceManager singleton { get; private set; }
 
+    [Header("File Storage Config")]
+    [SerializeField] public string fileName;
+    
+    
     private GameData gameData;
     private List<DataPersistable> dataPersistables;
+    private FileDataHandler dataHandler;
 
     // EFFECTS: Creates a Singleton DataPersistenceManager
     // MODIFIES: this
@@ -17,20 +23,16 @@ public class DataPersistenceManager : MonoBehaviour
     {
         if (singleton != null && singleton != this)
         { 
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
         else
         {
             singleton = this;
         }
+        DontDestroyOnLoad(this.gameObject);
+        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
     }
-    // EFFECTS: On the scene starting load the game
-    // MODIFIES: this, gameData
-    private void Start()
-    {
-        this.dataPersistables = FindAllDataPersistables();
-        LoadGame();
-    }
+    
 
     // EFFECTS: Starts a new game
     // MODIFIES: this
@@ -38,12 +40,37 @@ public class DataPersistenceManager : MonoBehaviour
     {
         this.gameData = new GameData();
     }
+
+    public void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+    public void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+    }
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        this.dataPersistables = FindAllDataPersistables();
+        LoadGame();
+        Debug.LogError("Loaded");
+    }
+
+    public void OnSceneUnloaded(Scene scene)
+    {
+        SaveGame();
+        Debug.LogError("Saved");
+    }
     
     // EFFECTS: Loads a game from saved data. If there is no saved data, start a new game
     // MODIFIES: this, gameData
     public void LoadGame()
     {
-        //TODO: Load save data from a file
+        this.gameData = dataHandler.Load();
+        
+        
         if(this.gameData == null)
         {
             NewGame();
@@ -53,7 +80,8 @@ public class DataPersistenceManager : MonoBehaviour
         {
             dataPersistable.LoadData(gameData);
         }
-        //TODO: Ensure the rest of the system has the save data
+   
+        
 
     }
     // EFFECTS: Saves the current game state to gameData
@@ -65,7 +93,9 @@ public class DataPersistenceManager : MonoBehaviour
         {
             dataPersistable.SaveData(ref gameData);
         }
-        // TODO: Save the data to a file using the data handler
+        
+
+        dataHandler.Save(gameData);
     }
     
     //EFFECTS: Saves the game when the application is quit
@@ -74,6 +104,7 @@ public class DataPersistenceManager : MonoBehaviour
     {
         SaveGame();
     }
+
     //EFFECTS: Find all data persistables that are also of type MonoBehaviour
     private List<DataPersistable> FindAllDataPersistables()
     {

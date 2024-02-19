@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using System.Collections;
 public class TimeManager : MonoBehaviour, DataPersistable
 {
     public static Action OnMinuteChanged;
@@ -15,18 +17,17 @@ public class TimeManager : MonoBehaviour, DataPersistable
 
     private float gameMinuteToRealSecond = 0.1f;
     private float timer;
-    private float startTime;
-    public Light2D sun;
+    private Light2D sun;
 
     public GameObject PauseMenuPanel;
     // Start is called before the first frame update
     void Start()
     {
-        this.startTime = Time.time;
         Day = 1;
         Minute = 0;
         Hour = 8;
         this.timer = gameMinuteToRealSecond;
+        sun = GameObject.FindWithTag("Sun").GetComponent<Light2D>();
     }
 
     // Update is called once per frame
@@ -60,7 +61,6 @@ public class TimeManager : MonoBehaviour, DataPersistable
             PauseMenuPanel.SetActive(false);
             Time.timeScale = 1f;
         }
-        //Setup();
     }
 
     private void UpdateTimeCounter()
@@ -94,7 +94,7 @@ public class TimeManager : MonoBehaviour, DataPersistable
 
     private void UpdateLight()
     {
-        float timeElapsed = Time.time - startTime;
+        float timeElapsed = Time.timeSinceLevelLoad;
         float period = 24 * 60 * gameMinuteToRealSecond;
         float intensity = Mathf.Sin(timeElapsed * Mathf.PI * 2 / period) * 0.5f + 0.5f;
         sun.intensity = intensity;
@@ -102,7 +102,6 @@ public class TimeManager : MonoBehaviour, DataPersistable
 
     public void Sleep()
     {
-        startTime = Time.time;
         if(Hour >= 8)
         {
             Day++;
@@ -113,21 +112,19 @@ public class TimeManager : MonoBehaviour, DataPersistable
         OnMinuteChanged?.Invoke();
         OnHourChanged?.Invoke();
         OnDayChanged?.Invoke();
-        Time.timeScale = 0f;
         SceneManager.LoadSceneAsync(1);
     }
 
     public void LoadData(GameData data)
     {
-        this.startTime = data.startTime;
         Day = data.Day;
         Minute = data.Minute;
         Hour = data.Hour;
+        sun = GameObject.FindWithTag("Sun").GetComponent<Light2D>();
     }
 
     public void SaveData(ref GameData data)
     {
-        data.startTime= this.startTime ;
         data.Day = Day;
         data.Minute = Minute;
         data.Hour = Hour;
