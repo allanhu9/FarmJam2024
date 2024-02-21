@@ -14,11 +14,10 @@ public class GameData
     public int Minute;
     public List<SavedTile> interactableMap;
     public List<SavedTile> interactedMap;
+    public List<Inventory.Slot> inventory;
     // Notes on what needs to be saved:
-    // TileManager
     // Inventory
     // Grab saved info at the correct time from Inventory's constructor and use Add function (UI will naturally refresh).
-    // Grab saved tilemaps on start from TileManager.
 
     // EFFECTS: Constructs a gameData object that stores all the game data
     public GameData()
@@ -40,5 +39,7 @@ public class SavedTile
     public Vector3Int pos;
     public TileBase mapTile;
 }
+
+
 
 

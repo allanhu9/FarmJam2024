@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, DataPersistable
 {
     private Rigidbody2D rb;   
     [SerializeField] private float speed = 1;
@@ -86,5 +86,15 @@ public class Player : MonoBehaviour
     // EFFECTS: Sets the location of the player at 60fps
     private void FixedUpdate() {
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+    }
+    
+    public void LoadData(GameData data)
+    {
+        this.inventory.slots = data.inventory;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.inventory = this.inventory.slots;
     }
 }

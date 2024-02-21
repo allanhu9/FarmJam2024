@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
-using System.Collections;
 public class TimeManager : MonoBehaviour, DataPersistable
 {
     public static Action OnMinuteChanged;
@@ -20,6 +19,8 @@ public class TimeManager : MonoBehaviour, DataPersistable
     private Light2D sun;
 
     public GameObject PauseMenuPanel;
+    public GameObject SleepScreen;
+    public GameObject Clock;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +47,10 @@ public class TimeManager : MonoBehaviour, DataPersistable
         if (Input.GetKeyDown(KeyCode.P))
         {
             Sleep();
+        }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            WakeUp();
         }
     }
     public void TogglePauseMenu()
@@ -112,8 +117,21 @@ public class TimeManager : MonoBehaviour, DataPersistable
         OnMinuteChanged?.Invoke();
         OnHourChanged?.Invoke();
         OnDayChanged?.Invoke();
+        Time.timeScale = 0f;
+        Clock.SetActive(false);
+        SleepScreen.SetActive(true);
         DataPersistenceManager.singleton.SaveGame();
-        SceneManager.LoadSceneAsync(1);
+    }
+
+    public void WakeUp()
+    {
+        DataPersistenceManager.singleton.LoadGame();
+        SleepScreen.SetActive(false);
+        Clock.SetActive(true);
+        Time.timeScale = 1f;
+        OnMinuteChanged?.Invoke();
+        OnHourChanged?.Invoke();
+        OnDayChanged?.Invoke();
     }
 
     public void LoadData(GameData data)
@@ -130,4 +148,6 @@ public class TimeManager : MonoBehaviour, DataPersistable
         data.Minute = Minute;
         data.Hour = Hour;
     }
+
+    
 }

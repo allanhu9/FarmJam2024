@@ -20,11 +20,11 @@ public class TileManager : MonoBehaviour, DataPersistable
     {
         InitializeInteractableTiles();
     }
-    
+
     // EFFECTS: returns true if the tile at position is interactable
     public bool IsInteractable(Vector3Int position) {
         TileBase tile = interactableMap.GetTile(position);
-        if(tile != null) 
+        if (tile != null)
             return tile.name == "Interactable";
         return false;
     }
@@ -58,7 +58,7 @@ public class TileManager : MonoBehaviour, DataPersistable
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void LoadData(GameData data)
@@ -66,10 +66,13 @@ public class TileManager : MonoBehaviour, DataPersistable
         highlightMap = GameObject.FindWithTag("HighlightedTile").GetComponent<Tilemap>();
         interactableMap = GameObject.FindWithTag("InteractableTiles").GetComponent<Tilemap>();
         interactedMap = GameObject.FindWithTag("InteractedTiles").GetComponent<Tilemap>();
-        foreach(SavedTile tile in data.interactableMap)
+
+  
+        foreach (SavedTile tile in data.interactableMap)
         {
             interactableMap.SetTile(tile.pos, tile.mapTile);
         }
+
         foreach (SavedTile tile in data.interactedMap)
         {
             interactedMap.SetTile(tile.pos, tile.mapTile);
@@ -79,7 +82,7 @@ public class TileManager : MonoBehaviour, DataPersistable
     }
 
     public void SaveData(ref GameData data)
-    {
+    { 
         data.interactableMap = getTilesFromMap(interactableMap);
         data.interactedMap = getTilesFromMap(interactedMap);
     }

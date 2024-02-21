@@ -113,10 +113,4 @@ public class DataPersistenceManager : MonoBehaviour
         
         return new List<DataPersistable>(dataPersistables);
     }
-    //EFFECTS: Goes to the sleep screen
-    public void NextDay()
-    {
-        SaveGame();
-        
-    }
 }
