@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,8 @@ public class GameData
     public int Day;
     public int Hour;
     public int Minute;
-    public Tilemap interactableMap;
-    public Tilemap interactedMap;
+    public List<SavedTile> interactableMap;
+    public List<SavedTile> interactedMap;
     // Notes on what needs to be saved:
     // TileManager
     // Inventory
@@ -26,7 +27,18 @@ public class GameData
         this.Day = 1;
         this.Minute = 0;
         this.Hour = 8;
-        interactableMap = GameObject.FindWithTag("InteractableTiles").GetComponent<Tilemap>();
-        interactedMap = GameObject.FindWithTag("InteractedTiles").GetComponent<Tilemap>();
     }
 }
+[Serializable]
+public class SavedTile
+{
+    public SavedTile(Vector3Int pos, Tile mapTile)
+    {
+        this.pos = pos;
+        this.mapTile = mapTile;
+    }
+    public Vector3Int pos;
+    public TileBase mapTile;
+}
+
+

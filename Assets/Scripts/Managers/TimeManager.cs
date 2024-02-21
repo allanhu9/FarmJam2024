@@ -112,6 +112,7 @@ public class TimeManager : MonoBehaviour, DataPersistable
         OnMinuteChanged?.Invoke();
         OnHourChanged?.Invoke();
         OnDayChanged?.Invoke();
+        DataPersistenceManager.singleton.SaveGame();
         SceneManager.LoadSceneAsync(1);
     }
 

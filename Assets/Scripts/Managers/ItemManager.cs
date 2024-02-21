@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 // This class is currently unused, but it should have a copy of every item so the correct item script can be easily acquired through the gameManager singleton
-public class ItemManager : MonoBehaviour
+public class ItemManager : MonoBehaviour, DataPersistable
 {
     public Item[] items; // Item prefabs are added here in the editor.
 
@@ -30,5 +30,15 @@ public class ItemManager : MonoBehaviour
             return itemsDict[key];
         }
         return null;
+    }
+
+    public void LoadData(GameData data)
+    {
+        
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        
     }
 }

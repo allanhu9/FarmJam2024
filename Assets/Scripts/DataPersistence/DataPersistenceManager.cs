@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
 
 public class DataPersistenceManager : MonoBehaviour
 {
@@ -16,7 +17,8 @@ public class DataPersistenceManager : MonoBehaviour
     private GameData gameData;
     private List<DataPersistable> dataPersistables;
     private FileDataHandler dataHandler;
-
+    public static Action Saved;
+    public static Action Loaded;
     // EFFECTS: Creates a Singleton DataPersistenceManager
     // MODIFIES: this
     private void Awake()
@@ -55,13 +57,12 @@ public class DataPersistenceManager : MonoBehaviour
     {
         this.dataPersistables = FindAllDataPersistables();
         LoadGame();
-        Debug.LogError("Loaded");
+        Debug.Log("Loaded");
     }
 
     public void OnSceneUnloaded(Scene scene)
     {
         SaveGame();
-        Debug.LogError("Saved");
     }
     
     // EFFECTS: Loads a game from saved data. If there is no saved data, start a new game
@@ -93,9 +94,9 @@ public class DataPersistenceManager : MonoBehaviour
         {
             dataPersistable.SaveData(ref gameData);
         }
-        
 
         dataHandler.Save(gameData);
+        Debug.Log("Saved");
     }
     
     //EFFECTS: Saves the game when the application is quit
@@ -111,5 +112,11 @@ public class DataPersistenceManager : MonoBehaviour
         IEnumerable<DataPersistable> dataPersistables = FindObjectsOfType<MonoBehaviour>().OfType<DataPersistable>();
         
         return new List<DataPersistable>(dataPersistables);
+    }
+    //EFFECTS: Goes to the sleep screen
+    public void NextDay()
+    {
+        SaveGame();
+        
     }
 }
