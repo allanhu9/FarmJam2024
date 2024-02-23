@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c372b326cccad6469fe97fb732c2081, type: 3}
   m_Name: TestItem2
   m_EditorClassIdentifier: 
-  itemName: TestItem2
+  itemName: Aubergine_Dead
   icon: {fileID: 21300000, guid: 00f165b1254df1346b4653643b7997d9, type: 3}

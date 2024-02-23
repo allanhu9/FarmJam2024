@@ -3,17 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Manages the UI for the inventory
+// Manages the UI for the player inventory
 
 public class InventoryUI : MonoBehaviour
 {
     public GameObject inventoryPanel;
     public Player player;
     public List<SlotUI> slots;
+    [SerializeField] private ToolBarUI toolbarUI;
     [SerializeField] private GameObject slotPrefab;
     private GameObject slotContainer;
 
-    // Using the slot prefab, instantiates the slot prefabs (16 of them) in the Slots GameObject in the Inventory GameObject
+    // Using the slot prefab, instantiates the slot prefabs (16, set in editor) in the Slots GameObject in the Inventory GameObject
     void Awake() {
         slotContainer = transform.GetChild(0).transform.GetChild(0).gameObject;
         GameObject slot;
@@ -27,12 +28,16 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    void Start() {
+        Refresh();
+    }
+
     // EFFECTS: When "F" is pressed, toggle inventory.
     // TODO: This should be put in Player class using the PlayerInput feature of Unity
     void Update()
     {  
        if(Input.GetKeyDown(KeyCode.F)) {
-        ToggleInventory();
+            ToggleInventory();
        } 
     }
 
@@ -53,7 +58,7 @@ public class InventoryUI : MonoBehaviour
     // EFFECTS: displays the correct item in each slot and the correct amount of each item based on the inventory class
     // MODIFIES: this, slots
     public void Refresh() { 
-        if(slots.Count == player.inventory.slots.Count) {
+        if(slots.Count + toolbarUI.Count() == player.inventory.slots.Count) {
             for (int i = 0; i < slots.Count; i++) {
                 if (player.inventory.slots[i].itemName != ""){
                     slots[i].SetItem(player.inventory.slots[i]);
@@ -61,6 +66,16 @@ public class InventoryUI : MonoBehaviour
                     slots[i].SetEmpty();
                 }
             }
+
+            for (int i = slots.Count; i < slots.Count+toolbarUI.Count(); i++) {
+                if (player.inventory.slots[i].itemName != "") {
+                        toolbarUI.SetItem(i - slots.Count, player.inventory.slots[i]);
+                    } else {
+                        toolbarUI.SetEmpty(i - slots.Count);
+                    }
+            }
+        } else {
+            Debug.Log("Player inventory size doesn't match toolbar + UI inventory size");
         }
     }
 }

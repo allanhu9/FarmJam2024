@@ -19,7 +19,7 @@ public class Player : MonoBehaviour, DataPersistable
     // EFFECTS: Instantiate the inventory collection
     // MODIFIES: this, Inventory
     private void Awake() {
-        inventory = new Inventory(16);
+        inventory = new Inventory(23); // MUST BE INSTANTIATED TO THE SIZE OF THE INVENTORY + THE TOOLBAR (see InventoryUI and ToolBarUI)
         inventoryOpen = false;
     }
 
@@ -69,7 +69,6 @@ public class Player : MonoBehaviour, DataPersistable
                 GameManager.singleton.tileManager.SetInteracted(interactPosition);
             }
         }
-       
     }
 
     // Update is called once per frame
@@ -88,6 +87,13 @@ public class Player : MonoBehaviour, DataPersistable
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
     
+    public void DropItem(int index) {
+        int numToDrop = inventory.ItemCount(index);
+        Item itemToDrop = inventory.Pop(index);
+        for (int i = 0; i < numToDrop; i++) {
+            Instantiate(itemToDrop, new Vector3Int(Mathf.RoundToInt(transform.position.x + 1.2f*facingDirection.x), Mathf.RoundToInt(transform.position.y + 1.2f*facingDirection.y), 0), Quaternion.identity);
+        }
+    }
     public void LoadData(GameData data)
     {
         this.inventory.slots = data.inventory;
